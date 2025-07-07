@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Validation Form</title>
+    <style>
+        /* CSS Styling for the form container and elements */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <input type="email" id="emailInput" placeholder="Enter your email">
+            <div id="errorMessage" class="error"></div>
+        </div>
+        <button onclick="validateEmail()">Submit</button>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const emailInput = document.getElementById('emailInput');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Regular expression for email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Function to validate email
+        function validateEmail() {
+            const email = emailInput.value.trim();
+            
+            // Check if email is empty
+            if (!email) {
+                showError('Email is required');
+                return false;
+            }
+            
+            // Check if email matches the regex pattern
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address');
+                return false;
+            }
+            
+            // Clear error message if validation passes
+            hideError();
+            return true;
+        }
+
+        // Function to show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Function to hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+        }
+
+        // Event listener for real-time validation on input
+        emailInput.addEventListener('input', validateEmail);
+
+        // Note: Submit button click validation is handled by the onclick attribute
+        // in the HTML, which calls validateEmail()
+    </script>
+</body>
+</html>

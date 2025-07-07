@@ -1,0 +1,100 @@
+/* ================================
+   Global Page Styles
+   ================================ */
+
+/* Apply base font and padding to body */
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+  background: #f9f9f9; /* Light background for clean appearance */
+}
+
+/* Section title styling */
+h2 {
+  color: #333; /* Dark gray for readability */
+}
+
+/* ================================
+   Form Layout Styling
+   ================================ */
+
+/* Align input elements in a row with spacing */
+.form-group {
+  display: flex;
+  align-items: center;   /* Vertically center all elements */
+  flex-wrap: wrap;       /* Allow wrap on smaller screens */
+  gap: 10px;             /* Spacing between elements */
+  margin-bottom: 20px;
+}
+
+/* ================================
+   Form Elements (Label, Select, Input)
+   ================================ */
+
+/* Make labels bold for visibility */
+label {
+  font-weight: bold;
+}
+
+/* Base styling for both <select> and <input> */
+select,
+input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Slight rounding for modern look */
+}
+
+/* ================================
+   Country Code Display Label
+   ================================ */
+
+/* Visual display next to dropdown showing the dial code */
+.country-code-label {
+  min-width: 50px;
+  font-size: 1rem;
+  background-color: #e0e0e0; /* Light gray for separation */
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+/* ================================
+   Submit Button Styles
+   ================================ */
+
+#submitBtn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #007bff; /* Bootstrap-style blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer; /* Indicate clickable */
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect to indicate interaction */
+#submitBtn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* ================================
+   Error Message Display
+   ================================ */
+
+#errorMsg {
+  color: red;
+  font-weight: normal;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+/* ================================
+   Result Display Message
+   ================================ */
+
+#result {
+  margin-top: 20px;
+  font-weight: bold;
+  color: green; /* Green to indicate success */
+}

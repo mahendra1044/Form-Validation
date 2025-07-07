@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mobile Number Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    select, input {
+      padding: 8px;
+      margin-right: 10px;
+      font-size: 1rem;
+    }
+
+    .country-code-label {
+      min-width: 50px;
+      font-size: 1rem;
+      background-color: #e0e0e0;
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+
+    #submitBtn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Update Mobile Number</h2>
+  <form id="mobileForm">
+    <div class="form-group">
+      <!-- Country selection dropdown -->
+      <label for="country">Country:</label>
+      <select id="country" name="country">
+        <option value="IN" data-code="+91">India</option>
+        <option value="US" data-code="+1">United States</option>
+        <option value="UK" data-code="+44">United Kingdom</option>
+        <option value="AU" data-code="+61">Australia</option>
+        <!-- Add more countries as needed -->
+      </select>
+
+      <!-- Country code label (non-editable) -->
+      <div id="countryCodeLabel" class="country-code-label">+91</div>
+
+      <!-- User input for mobile number -->
+      <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Enter mobile number" required />
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" id="submitBtn">Submit</button>
+  </form>
+
+  <!-- Result output -->
+  <div id="result"></div>
+
+  <script>
+    // Reference to DOM elements
+    const countrySelect = document.getElementById("country");
+    const countryCodeLabel = document.getElementById("countryCodeLabel");
+    const mobileInput = document.getElementById("mobileNumber");
+    const form = document.getElementById("mobileForm");
+    const resultDiv = document.getElementById("result");
+
+    // Update the country code label whenever a new country is selected
+    countrySelect.addEventListener("change", function () {
+      // Get the selected option
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const countryCode = selectedOption.getAttribute("data-code");
+
+      // Update the label next to dropdown
+      countryCodeLabel.textContent = countryCode;
+    });
+
+    // Handle form submission
+    form.addEventListener("submit", function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const countryCode = selectedOption.getAttribute("data-code");
+      const mobileNumber = mobileInput.value.trim();
+
+      // Basic validation
+      if (!/^\d+$/.test(mobileNumber)) {
+        alert("Please enter a valid numeric mobile number.");
+        return;
+      }
+
+      // Combine country code + mobile number
+      const fullMobileNumber = countryCode + mobileNumber;
+
+      // Display or send to backend
+      resultDiv.textContent = "Saved mobile number: " + fullMobileNumber;
+
+      // Example: send to backend (mocked)
+      // fetch('/api/saveMobile', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ mobile: fullMobileNumber })
+      // });
+    });
+  </script>
+</body>
+</html>

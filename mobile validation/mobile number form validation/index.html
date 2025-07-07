@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Mobile Number</title>
+
+  <!-- Link external stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h2>Update Mobile Number</h2>
+
+  <!-- Mobile number update form -->
+  <form id="mobileForm" novalidate>
+    <div class="form-group">
+      <label for="country">Country:</label>
+
+      <!-- Country dropdown list -->
+      <select id="country" name="country"></select>
+
+      <!-- Country dial code label -->
+      <div id="countryCodeLabel" class="country-code-label">+--</div>
+
+      <!-- Mobile number input -->
+      <input
+        type="text"
+        id="mobileNumber"
+        name="mobileNumber"
+        placeholder="Enter mobile number"
+        required
+      />
+    </div>
+
+    <!-- Error message display -->
+    <div class="error" id="errorMsg"></div>
+
+    <!-- Submit button -->
+    <button type="submit" id="submitBtn">Submit</button>
+  </form>
+
+  <!-- Success result message -->
+  <div id="result"></div>
+
+  <!-- Link external JS file -->
+  <script src="script.js"></script>
+</body>
+</html>

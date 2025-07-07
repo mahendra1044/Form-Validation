@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Mobile Number</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f9f9f9;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    select, input {
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .country-code-label {
+      min-width: 50px;
+      font-size: 1rem;
+      background-color: #e0e0e0;
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+
+    #submitBtn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #submitBtn:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .error {
+      color: red;
+      font-weight: normal;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Update Mobile Number</h2>
+  <form id="mobileForm" novalidate>
+    <div class="form-group">
+      <label for="country">Country:</label>
+      <select id="country" name="country"></select>
+
+      <div id="countryCodeLabel" class="country-code-label">+--</div>
+
+      <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Enter mobile number" required />
+    </div>
+
+    <div class="error" id="errorMsg"></div>
+
+    <button type="submit" id="submitBtn">Submit</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    // Simulated backend values (pre-fill)
+    const backendData = {
+      countryCode: "US", // Will select United States
+      mobileNumber: "987654321"
+    };
+
+    // List of countries with dial codes
+    const countries = [
+      { name: "India", code: "IN", dialCode: "+91" },
+      { name: "United States", code: "US", dialCode: "+1" },
+      { name: "United Kingdom", code: "UK", dialCode: "+44" },
+      { name: "Australia", code: "AU", dialCode: "+61" },
+      { name: "Germany", code: "DE", dialCode: "+49" }
+    ];
+
+    const countrySelect = document.getElementById("country");
+    const countryCodeLabel = document.getElementById("countryCodeLabel");
+    const mobileInput = document.getElementById("mobileNumber");
+    const form = document.getElementById("mobileForm");
+    const resultDiv = document.getElementById("result");
+    const errorMsg = document.getElementById("errorMsg");
+
+    // Dynamically populate country dropdown
+    function populateDropdown() {
+      countries.forEach(country => {
+        const option = document.createElement("option");
+        option.value = country.code;
+        option.textContent = country.name;
+        option.setAttribute("data-dialcode", country.dialCode);
+        countrySelect.appendChild(option);
+      });
+    }
+
+    // Set pre-selected backend values
+    function setInitialValues() {
+      countrySelect.value = backendData.countryCode;
+      mobileInput.value = backendData.mobileNumber;
+      updateDialCode();
+    }
+
+    // Update dial code label based on selected country
+    function updateDialCode() {
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const dialCode = selectedOption.getAttribute("data-dialcode");
+      countryCodeLabel.textContent = dialCode || "+--";
+    }
+
+    // Validate mobile number (8–15 digits, not starting with 0)
+    function isValidMobile(number) {
+      return /^[1-9]\d{7,14}$/.test(number);
+    }
+
+    // Event: Update dial code on country change
+    countrySelect.addEventListener("change", updateDialCode);
+
+    // Event: Allow only digits
+    mobileInput.addEventListener("input", () => {
+      mobileInput.value = mobileInput.value.replace(/\D/g, "");
+    });
+
+    // Event: Handle form submit
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      errorMsg.textContent = "";
+      resultDiv.textContent = "";
+
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const dialCode = selectedOption.getAttribute("data-dialcode");
+      const mobileNumber = mobileInput.value.trim();
+
+      if (!isValidMobile(mobileNumber)) {
+        errorMsg.textContent = "Enter a valid mobile number (8–15 digits, not starting with 0).";
+        return;
+      }
+
+      const fullNumber = dialCode + mobileNumber;
+      resultDiv.textContent = "Saved mobile number: " + fullNumber;
+
+      // Simulated backend payload
+      console.log({
+        country: selectedOption.value,
+        fullMobile: fullNumber
+      });
+    });
+
+    // Init
+    populateDropdown();
+    setInitialValues();
+  </script>
+</body>
+</html>

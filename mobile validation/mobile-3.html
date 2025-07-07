@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Mobile Number</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f9f9f9;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    select, input {
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .country-code-label {
+      min-width: 50px;
+      font-size: 1rem;
+      background-color: #e0e0e0;
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+
+    #submitBtn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #submitBtn:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .error {
+      color: red;
+      font-weight: normal;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Update Mobile Number</h2>
+  <form id="mobileForm" novalidate>
+    <div class="form-group">
+      <label for="country">Country:</label>
+
+      <!-- Country dropdown list -->
+      <select id="country" name="country"></select>
+
+      <!-- Country dial code label -->
+      <div id="countryCodeLabel" class="country-code-label">+--</div>
+
+      <!-- Mobile number input -->
+      <input
+        type="text"
+        id="mobileNumber"
+        name="mobileNumber"
+        placeholder="Enter mobile number"
+        required
+      />
+    </div>
+
+    <!-- Error message display -->
+    <div class="error" id="errorMsg"></div>
+
+    <!-- Submit button -->
+    <button type="submit" id="submitBtn">Submit</button>
+  </form>
+
+  <!-- Success result message -->
+  <div id="result"></div>
+
+  <script>
+    // ========================
+    // CONFIGURATION SECTION
+    // ========================
+
+    // List of countries with ISO codes and dial codes
+    const COUNTRY_LIST = [
+      { name: "India", code: "IN", dialCode: "+91" },
+      { name: "United States", code: "US", dialCode: "+1" },
+      { name: "United Kingdom", code: "UK", dialCode: "+44" },
+      { name: "Australia", code: "AU", dialCode: "+61" },
+      { name: "Germany", code: "DE", dialCode: "+49" }
+    ];
+
+    // Simulated backend response for pre-fill
+    const BACKEND_PREFILL = {
+      countryCode: "US",      // ISO code
+      mobileNumber: "987654321"
+    };
+
+    // ========================
+    // DOM ELEMENT REFERENCES
+    // ========================
+    const countrySelect = document.getElementById("country");
+    const countryCodeLabel = document.getElementById("countryCodeLabel");
+    const mobileInput = document.getElementById("mobileNumber");
+    const form = document.getElementById("mobileForm");
+    const resultDiv = document.getElementById("result");
+    const errorDiv = document.getElementById("errorMsg");
+
+    // ========================
+    // INITIALIZATION FUNCTIONS
+    // ========================
+
+    // Populate the dropdown with countries
+    function populateCountryDropdown() {
+      COUNTRY_LIST.forEach(({ name, code, dialCode }) => {
+        const option = document.createElement("option");
+        option.value = code;                         // ISO country code
+        option.textContent = name;                   // Display name
+        option.setAttribute("data-dialcode", dialCode); // Custom attribute
+        countrySelect.appendChild(option);
+      });
+    }
+
+    // Pre-fill values using backend data
+    function applyBackendPrefill(data) {
+      countrySelect.value = data.countryCode;
+      mobileInput.value = data.mobileNumber;
+      updateCountryCodeLabel();
+    }
+
+    // Set the country code label based on selected dropdown value
+    function updateCountryCodeLabel() {
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const dialCode = selectedOption.getAttribute("data-dialcode") || "+--";
+      countryCodeLabel.textContent = dialCode;
+    }
+
+    // ========================
+    // VALIDATION FUNCTION
+    // ========================
+
+    /**
+     * Validate mobile number.
+     * Rules:
+     * - Only digits
+     * - 8 to 15 digits
+     * - Should not start with 0
+     */
+    function isValidMobileNumber(number) {
+      return /^[1-9]\d{7,14}$/.test(number);
+    }
+
+    // ========================
+    // EVENT HANDLERS
+    // ========================
+
+    // Allow only numeric input
+    function restrictToDigits(event) {
+      event.target.value = event.target.value.replace(/\D/g, "");
+    }
+
+    // Handle form submission
+    function handleFormSubmit(event) {
+      event.preventDefault(); // Prevent page reload
+
+      // Clear previous error and result
+      errorDiv.textContent = "";
+      resultDiv.textContent = "";
+
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const dialCode = selectedOption.getAttribute("data-dialcode");
+      const mobileNumber = mobileInput.value.trim();
+
+      // Perform validation
+      if (!isValidMobileNumber(mobileNumber)) {
+        errorDiv.textContent = "Enter a valid mobile number (8–15 digits, not starting with 0).";
+        return;
+      }
+
+      // Construct full mobile number for backend submission
+      const fullMobileNumber = dialCode + mobileNumber;
+
+      // Display the saved number
+      resultDiv.textContent = "Saved mobile number: " + fullMobileNumber;
+
+      // Simulate sending to backend
+      console.log("Payload to backend:", {
+        country: selectedOption.value,
+        fullMobile: fullMobileNumber
+      });
+    }
+
+    // ========================
+    // SETUP ON PAGE LOAD
+    // ========================
+
+    // Attach all initial listeners and populate UI
+    function initializeForm() {
+      populateCountryDropdown();
+      applyBackendPrefill(BACKEND_PREFILL);
+      countrySelect.addEventListener("change", updateCountryCodeLabel);
+      mobileInput.addEventListener("input", restrictToDigits);
+      form.addEventListener("submit", handleFormSubmit);
+    }
+
+    // Trigger initialization
+    initializeForm();
+  </script>
+</body>
+</html>
